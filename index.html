@@ -444,6 +444,21 @@ function submeter() {
   if(!comp){errEl.textContent='Selecciona a competicao.';errEl.classList.add('show');return;}
   if(!acoes.length){errEl.textContent='Selecciona pelo menos uma opcao.';errEl.classList.add('show');return;}
 
+  // Validar: nao pode haver dois anfitrioes no mesmo jogo
+  if(acoes.indexOf('Fui Anfitriao')>=0 || acoes.indexOf('Fui Anfitrião')>=0) {
+    if(DATA && DATA.act) {
+      var compCurta = comp.split('—')[0].trim();
+      var jaAnf = DATA.act.some(function(a){
+        return a.dISO === data && a.comp === compCurta && a.acoes.indexOf('Anfitri')>=0;
+      });
+      if(jaAnf) {
+        errEl.textContent='⚠️ Já existe um anfitrião registado para este jogo!';
+        errEl.classList.add('show');
+        return;
+      }
+    }
+  }
+
   var btn=document.getElementById('btnSubmit'), fb=document.getElementById('submitFeedback');
   btn.disabled=true; btn.textContent='A enviar...'; fb.classList.remove('show');
 
