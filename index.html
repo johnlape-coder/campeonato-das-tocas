@@ -310,22 +310,22 @@ function calcular(rows) {
       ts: r.ts ? r.ts.getTime() : 0
     });
   });
-  act.sort(function(a,b){ return b.ts-a.ts; });
+  act.sort(function(a,b){ if(b.dISO!==a.dISO) return b.dISO>a.dISO?1:-1; return b.ts-a.ts; });
 
   var res = [];
   MEMBROS.forEach(function(nome) {
     var eventos = ev[nome];
     eventos.sort(function(a,b){ var d=a.data-b.data; return d?d:a.ts-b.ts; });
-    var pts=0,pre=0,anf=0,for2=0,dru=0;
+    var pts=0,pre=0,anf=0,for2=0,dru=0,lamp=0;
     eventos.forEach(function(e) {
       var a = e.acoes;
       if (a.indexOf('Drula')>=0)          { pts=0; dru++; return; }
       if (a.indexOf('Estive na Toca')>=0) { pts+=0.5; pre++; }
-      if (a.indexOf('Anfitrião')>=0)        { pts+=3; anf++; }
+      if (a.indexOf('Anfitrão')>=0)        { pts+=3; anf++; }
       if (a.indexOf('jogo fora')>=0)      { pts+=2; for2++; }
-      if (a.indexOf('lampiões')>=0||a.indexOf('tripeiros')>=0) { pts-=2; }
+      if (a.indexOf('lampiões')>=0||a.indexOf('tripeiros')>=0) { pts-=2; lamp++; }
     });
-    res.push({ nome:nome, pts:Math.max(pts,0), pre:pre, anf:anf, for2:for2, dru:dru });
+    res.push({ nome:nome, pts:Math.max(pts,0), pre:pre, anf:anf, for2:for2, dru:dru, lamp:lamp });
   });
   res.sort(function(a,b){ return b.pts-a.pts; });
 
@@ -396,7 +396,8 @@ function renderStats(m) {
     return '<div class="stat-row"><div class="stat-top"><span class="stat-name">'+lbl+'</span><span class="stat-val">'+v+'</span></div><div class="stat-bar"><div class="stat-fill'+(red?' red':'')+'" style="width:'+pct+'%"></div></div></div>';
   };
   var h=row('Pontos',m.pts,mx('pts'),false)+row('Presencas',m.pre,mx('pre'),false)+row('Anfitrioes',m.anf,mx('anf'),false)+row('Jogos Fora',m.for2,mx('for2'),false);
-  if(m.dru>0) h+=row('Drulas',m.dru,m.dru,true);
+  if(m.lamp>0) h+=row('Lampioes/Tripeiros',m.lamp,Math.max(mx('lamp'),1),true);
+  if(m.dru>0)  h+=row('Drulas',m.dru,Math.max(mx('dru'),1),true);
   document.getElementById('stats').innerHTML=h;
 }
 
