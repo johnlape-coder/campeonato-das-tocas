@@ -237,30 +237,29 @@ function pad(n) { return String(n).padStart(2,'0'); }
 function carregarDados() {
   var btn = document.getElementById('btnRefresh');
   btn.classList.add('loading');
-  var cbName = 'gviz_' + Date.now();
-  var script = document.createElement('script');
+  // Usar gviz com intercept do google.visualization
   if (!window.google) window.google = {};
   if (!window.google.visualization) window.google.visualization = {};
-  window.google.visualization.Query = { setResponse: function(r) { if (window[cbName]) window[cbName](r); } };
-  window[cbName] = function(response) {
+  if (!window.google.visualization.Query) window.google.visualization.Query = {};
+  window.google.visualization.Query.setResponse = function(response) {
     try {
       var rows = parseGviz(response);
       DATA = calcular(rows);
       render();
     } catch(e) {
+      console.error(e);
       document.getElementById('standings').innerHTML = '<div class="empty">Erro ao processar dados.</div>';
     }
     btn.classList.remove('loading');
-    delete window[cbName];
-    if (script.parentNode) document.body.removeChild(script);
+    if (window._gvizScript && window._gvizScript.parentNode) document.body.removeChild(window._gvizScript);
   };
+  var script = document.createElement('script');
+  window._gvizScript = script;
   script.onerror = function() {
     btn.classList.remove('loading');
-    document.getElementById('standings').innerHTML = '<div class="empty">Erro ao carregar. Verifica ligacao.</div>';
-    delete window[cbName];
-    if (script.parentNode) document.body.removeChild(script);
+    document.getElementById('standings').innerHTML = '<div class="empty">Erro ao carregar.</div>';
   };
-  script.src = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&gid='+SHEET_GID+'&callback='+cbName+'&t='+Date.now();
+  script.src = 'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&gid='+SHEET_GID+'&t='+Date.now();
   document.body.appendChild(script);
 }
 
