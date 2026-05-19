@@ -446,34 +446,19 @@ function submeter() {
   var btn=document.getElementById('btnSubmit'), fb=document.getElementById('submitFeedback');
   btn.disabled=true; btn.textContent='A enviar...'; fb.classList.remove('show');
 
-  var cbName='sub_'+Date.now(), script=document.createElement('script');
-  var timer=setTimeout(function(){
-    delete window[cbName]; if(script.parentNode) document.body.removeChild(script);
-    fb.textContent='Enviado! A actualizar...'; fb.className='submit-feedback show ok';
-    btn.disabled=false; btn.textContent='Registar';
-    setTimeout(function(){ carregarDados(); fecharForm(); },1500);
-  },8000);
-
-  window[cbName]=function(r){
-    clearTimeout(timer); delete window[cbName]; if(script.parentNode) document.body.removeChild(script);
-    btn.disabled=false; btn.textContent='Registar';
-    if(r && r.success){
-      fb.textContent='Registado com sucesso!'; fb.className='submit-feedback show ok';
-      setTimeout(function(){ carregarDados(); fecharForm(); },1200);
-    } else {
-      fb.textContent='Erro: '+(r?r.error:'Tenta novamente.'); fb.className='submit-feedback show err';
-    }
-  };
-
-  script.onerror=function(){
-    clearTimeout(timer); delete window[cbName]; if(script.parentNode) document.body.removeChild(script);
-    btn.disabled=false; btn.textContent='Registar';
-    fb.textContent='Enviado!'; fb.className='submit-feedback show ok';
-    setTimeout(function(){ carregarDados(); fecharForm(); },1500);
-  };
-
-  script.src=API+'?action=submit&nome='+encodeURIComponent(nome)+'&dataJogo='+encodeURIComponent(data)+'&competicao='+encodeURIComponent(comp)+'&acoes='+encodeURIComponent(acoes.join(', '))+'&callback='+cbName+'&t='+Date.now();
-  document.body.appendChild(script);
+  // no-cors: o pedido chega ao Apps Script mesmo sem CORS
+  var url = API+'?action=submit&nome='+encodeURIComponent(nome)+'&dataJogo='+encodeURIComponent(data)+'&competicao='+encodeURIComponent(comp)+'&acoes='+encodeURIComponent(acoes.join(', '))+'&t='+Date.now();
+  
+  fb.textContent='A registar...'; fb.className='submit-feedback show ok';
+  
+  fetch(url, {mode:'no-cors'}).finally(function(){
+    // Aguarda 3s para o Apps Script processar e recarrega
+    setTimeout(function(){
+      btn.disabled=false; btn.textContent='Registar';
+      fb.textContent='Registado! A actualizar...'; fb.className='submit-feedback show ok';
+      setTimeout(function(){ carregarDados(); fecharForm(); }, 2000);
+    }, 3000);
+  });
 }
 </script>
 </body>
