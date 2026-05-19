@@ -183,14 +183,14 @@ body{font-family:'Inter',sans-serif;background:var(--green-dark);color:var(--tex
         <div class="check-item" data-val="Estive na Toca" onclick="toggleCheck(this)">
           <div class="check-box"></div><span class="check-label">Estive na Toca</span><span class="check-pts">+0,5 pts</span>
         </div>
-        <div class="check-item" data-val="Fui Anfitriao" onclick="toggleCheck(this)">
-          <div class="check-box"></div><span class="check-label">Fui Anfitriao</span><span class="check-pts">+3 pts</span>
+        <div class="check-item" data-val="Fui Anfitrião" onclick="toggleCheck(this)">
+          <div class="check-box"></div><span class="check-label">Fui Anfitrião</span><span class="check-pts">+3 pts</span>
         </div>
         <div class="check-item" data-val="Fui a jogo fora" onclick="toggleCheck(this)">
           <div class="check-box"></div><span class="check-label">Fui a jogo fora</span><span class="check-pts">+2 pts</span>
         </div>
-        <div class="check-item danger" data-val="Vi com lampioes/tripeiros" onclick="toggleCheck(this)">
-          <div class="check-box"></div><span class="check-label">Vi com lampioes/tripeiros</span><span class="check-pts">-2 pts</span>
+        <div class="check-item danger" data-val="Vi com lampiões/tripeiros" onclick="toggleCheck(this)">
+          <div class="check-box"></div><span class="check-label">Vi com lampiões/tripeiros</span><span class="check-pts">-2 pts</span>
         </div>
         <div class="check-item danger" data-val="Vi com o Drula" onclick="toggleCheck(this)">
           <div class="check-box"></div><span class="check-label">Vi com o Drula</span><span class="check-pts">ZERA pontos</span>
@@ -323,7 +323,7 @@ function calcular(rows) {
       if (a.indexOf('Estive na Toca')>=0) { pts+=0.5; pre++; }
       if (a.indexOf('Anfitrão')>=0)        { pts+=3; anf++; }
       if (a.indexOf('jogo fora')>=0)      { pts+=2; for2++; }
-      if (a.indexOf('lampiões')>=0||a.indexOf('tripeiros')>=0) { pts-=2; lamp++; }
+      if (a.indexOf('lampiao')>=0||a.indexOf('lampioes')>=0||a.indexOf('lampiões')>=0||a.indexOf('tripeiros')>=0) { pts-=2; lamp++; }
     });
     res.push({ nome:nome, pts:Math.max(pts,0), pre:pre, anf:anf, for2:for2, dru:dru, lamp:lamp });
   });
