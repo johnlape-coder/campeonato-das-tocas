@@ -239,6 +239,9 @@ function carregarDados() {
   btn.classList.add('loading');
   var cbName = 'gviz_' + Date.now();
   var script = document.createElement('script');
+  if (!window.google) window.google = {};
+  if (!window.google.visualization) window.google.visualization = {};
+  window.google.visualization.Query = { setResponse: function(r) { if (window[cbName]) window[cbName](r); } };
   window[cbName] = function(response) {
     try {
       var rows = parseGviz(response);
