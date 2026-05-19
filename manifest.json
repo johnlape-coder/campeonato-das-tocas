@@ -1,0 +1,22 @@
+{
+  "name": "Campeonato das Tocas",
+  "short_name": "Tocas 🦁",
+  "description": "Campeonato das Tocas — Sporting CP",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d2b0d",
+  "theme_color": "#1a5c1a",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/1IBaouEWUqoWWXNt5YOA_D9ktFg-BYL5X",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/1IBaouEWUqoWWXNt5YOA_D9ktFg-BYL5X",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
