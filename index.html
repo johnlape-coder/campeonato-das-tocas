@@ -357,20 +357,31 @@ document.addEventListener('visibilitychange', function() {
 });
 
 // ── CARREGAR DADOS ───────────────────────────────────────────
-async function carregarDados(mostrarLoading) {
+function carregarDados(mostrarLoading) {
   const btn = document.getElementById('btnRefresh');
   btn.classList.add('loading');
 
-  try {
-    const res  = await fetch(API + '?action=getData&t=' + Date.now());
-    const data = await res.json();
+  // Usar JSONP para contornar CORS
+  const callbackName = 'cb_' + Date.now();
+  const script = document.createElement('script');
+
+  window[callbackName] = function(data) {
     DATA = data;
     renderTudo();
-  } catch(e) {
-    console.error('Erro ao carregar dados:', e);
-  } finally {
     btn.classList.remove('loading');
-  }
+    delete window[callbackName];
+    document.body.removeChild(script);
+  };
+
+  script.onerror = function() {
+    console.error('Erro ao carregar dados');
+    btn.classList.remove('loading');
+    delete window[callbackName];
+    document.body.removeChild(script);
+  };
+
+  script.src = API + '?action=getData&callback=' + callbackName + '&t=' + Date.now();
+  document.body.appendChild(script);
 }
 
 // ── RENDER TUDO ──────────────────────────────────────────────
